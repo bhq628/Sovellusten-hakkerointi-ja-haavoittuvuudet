@@ -1,0 +1,212 @@
+# h3 No Strings Attached  
+
+Päivitys 07/10/2026:  
+Lisätty Tarkempia huomioita tekoälyn käytöstä koodissa, etenkin kohta b)  
+Tämä on uusin H3 versio.  
+
+> **Note:** Komentorivien komennot luotiin ChatGPT Versiolla 5.6  
+## a) Run 'passtr'. Find the correct password using 'strings'. Also find the flag  
+Aloitin tästä:  
+![](Images/H3Q1.png)  
+
+Salasanan etsimisen voi tehdä monella tavalla.  
+Yksi tapa on käyttää stringejä:  
+(Huomasin tämän vasta lopuksi, kun olin jo piilottanut salasanan)  
+![](Images/H3BBLastofUs.png)  
+
+Toinen tapa olisi katsoa "passtr" tiedoston sisään:  
+**cat passtr**  
+![](Images/H3Q2v2.png)   
+
+Kolmas tapa on nähdä se "passtr.c" tiedoston sisältä:  
+**cat passtr.c**  
+![](Images/H3Q3.png)  
+
+**./passtr** käynnistää esitetyn ohjelman nykyisessä työhakemistossa ja salasanan annettua päästään läpi:  
+![](Images/H3Q2.png)  
+
+## b) Make a new version of the passtr.c program where the password doesn't appear directly as-is in the binary. Demonstrate with a test that the password doesn't appear. (Obfuscation is sufficient.)  
+
+Aloitan tästä. Se on tiedosto "passtr.c" nano tekstieditorissa.  
+**Tässä vaiheessa tiedostoa ei olla muokattu.**  
+
+![](Images/H3BB.png)  
+
+Syötin koodinpätkän, jonka tarkoituksena on luoda salasanalle obfuskointi:  
+
+![](Images/H3BB2.png)  
+> **Note:** Gemini 3.5 Flash ymmärrys koodista rivi riviltä, joka on alkuperäisesti ChatGPT V5.6 luotu:  
+>
+Tässä päivitetyssä C-koodiversiossa on mukana uusi elementti: **XOR-pohjainen obfuskaatio eli salaus** datalle. Tässä on koodi rivi riviltä:  
+
+* `#include <stdio.h>`: Ottaa mukaan standardikirjaston syöte- ja tulostustoiminnot (kuten `printf` ja `scanf`).  
+
+
+* `#include <string.h>`: Ottaa mukaan merkkijonojen käsittelykirjaston (kuten `strcmp`).  
+
+
+* `int main() {`: Ohjelman pääfunktio, josta suoritus alkaa.  
+
+
+* `char password[20];`: Varaa muistista merkkijonotaulukon käyttäjän syöttämää salasanaa varten.  
+
+
+* `(vihreä peittoalue)`: Kuvaan piilotettu tai tyhjä rivi.  
+
+
+* `unsigned char encoded[] = {`: Määrittelee tavutaulukon (`encoded`), johon on tarkoitus sijoittaa obfuskoidut (salatut) luvut.  
+
+
+* `/* obfuskaatio numerot tähän */`: Kommentti, joka ohjeistamaan lisäämään salatut tavut taulukkoon.  
+
+
+* `};`: Sulkee taulukon määrittelyn.  
+
+
+* `unsigned char key = 0x5A;`: Määrittelee purkuavaimen (`0x5A`), jota käytetään datan dekoodaamiseen.  
+
+
+* `char decoded[20];`: Varaa muistista tilaa puretulle merkkijonolle (`decoded`).  
+
+
+* `for (int i = 0; i < sizeof(encoded); i++) {`: Aloittaa silmukan, joka käy läpi jokaisen tavun `encoded`-taulukossa.  
+
+
+* `decoded[i] = encoded[i] ^ key;`: Purkaa kunkin tavun XOR-operaatiolla (`^`) avaimen avulla ja tallentaa tuloksen `decoded`-taulukkoon.  
+
+
+* `}`: Sulkee `for`-silmukan.  
+
+
+* `decoded[sizeof(encoded)] = '\0';`: Lisää merkkijonon loppumerkin (null terminator) puretun taulukon perään, jotta sitä voidaan käsitellä turvallisesti merkkijonona.  
+
+
+* `printf("What's the password?\n");`: Tulostaa päätteelle kehotuksen kysyä salasanaa.  
+
+
+* `scanf("%19s", password);`: Lukee käyttäjän syötteen `password`-muuttujaan (korkeintaan 19 merkkiä turvallisesti).  
+
+
+* `if (0 == strcmp(password, "sala-hakkeri-321")) {`: Vertaa käyttäjän antamaa salasanaa odotettuun merkkijonoon (`"sala-hakkeri-321"`).  
+
+
+* `printf("Yes! That's the password. FLAG{...}\n");`: Tulostaa onnistumisviestin ja lipun (flag), jos salasana on oikein.  
+
+
+* `} else {`: Vaihtoehtoinen haara väärälle salasanalle.  
+
+
+* `printf("Sorry, no bonus.\n");`: Tulostaa ilmoituksen epäonnistumisesta.  
+
+
+* `}`: Sulkee `if-else`-rakenteen.  
+
+
+* `return 0;`: Palauttaa arvon 0 käyttöjärjestelmälle ohjelman onnistuneen päättymisen merkiksi.  
+
+
+* `}`: Sulkee pääfunktion (`main`).  
+
+
+Tässä salasanan jokainen kirjain muutetaan numeroiksi:  
+
+![](Images/H3BB3.png)  
+> **Note:** Gemini 3.5 Flash ymmärrys koodista rivi riviltä, joka on alkuperäisesti ChatGPT V5.6 luotu:  
+Tässä on kuvassa näkyvä terminaalikomento ja sen toiminta purettuna osioksi:  
+
+* `python3 -c`: Käynnistää Python 3 -tulkin komentoriviltä annetulla komennolla (`-c` tulee sanasta *command*) ilman erillisen skriptitiedoston luomista.  
+
+
+* `'print(", ".join(str(ord(c) ^ 0x5A) for c in "sala-hakkeri-321"))'`: Itse Python-koodinpätkä, joka suoritetaan kerralla:  
+
+<br>
+
+* `for c in "sala-hakkeri-321"`: Käy läpi jokaisen merkin `c` salasanan merkkijonosta.  
+
+
+* `ord(c)`: Muuntaa kyseisen kirjaimen tai merkin sitä vastaavaksi ASCII-numeroksi.  
+
+
+* `^ 0x5A`: Suorittaa XOR-operaation kyseisen numeron ja heksadesimaaliluvun `0x5A` (avaimen) välillä.  
+
+
+* `str(...)`: Muuttaa tuloksena syntyneen uuden numeron takaisin merkkijonoksi.  
+
+
+* `", ".join(...)`: Yhdistää kaikki saadut luvut yhdeksi merkkijonoksi, jossa luvut on erotettu pilkulla ja välilyönnillä.  
+
+
+* `print(...)`: Tulostaa lopullisen pilkuilla erotetun listan terminaalin näytölle.  
+
+Ja arvojen saatua ne lisätään tiedostoon:  
+![](Images/H3BB4.png)  
+(numerot asetettu vahingossa kommenttina)  
+
+Tässä tiedosto muunnetaan suoritettavaksi, mutta tämän sisällä oli syntaksivirhe.  
+![](Images/H3BB5prezap.png)  
+
+Korjaus syntaksiin. Lisäämällä puuttuva ")"  
+Tämän jälkeen suoritin edellisen kuvan komennon uudelleen.  
+![](Images/H3BB5zap.png)  
+
+<br>
+
+<br>
+
+Testasin kaiken luodun toimivuutta mutta tämä ei täysin vielä toimi:  
+**grep sala-hakkeri passtr.c**  
+tuloksena: if (0 == strcmp(password, "sala-hakkeri-321")) {  
+
+Joten muutin tiedoston "passtr.c" koodia lisää:  
+
+![](Images/H3BB6wiz.png)  
+
+> **Note:** Esitetty koodi saatu tekoälystä ChatGPT V5.6.  
+> Gemini 3.5 Flash ymmärrys koodista:  
+> ohjelma muutettiin tarkistamaan salasana suoraan tekstin sijaan siitä puretusta (decoded) muuttujasta,  
+> joka muodostetaan aiemmin määritellyn XOR-salauksen purun kautta.  
+![](Images/H3BB6was.png)  
+
+![](Images/H3BB6Last.png)  
+
+Onnistuin tekemään salasanasta käyttökelvottoman:  
+![](Images/H3BB7.png)  
+
+Poistin kommenttikentän.  
+![](Images/H3BB8.png)  
+
+Käytin äskeisen jälkeen **gcc passtr.c -o passtr**. Tämän jälkeen **./passtr** salasanan testausta varten.  
+salasana toimi.  
+Seuraavaksi testaan, että salasana on piilossa tiedostossa "passtr"  
+
+Tässä vielä binääri ennen:  
+![](Images/H3BB10v4past.png)  
+
+Ja jälkeen:  
+![](Images/H3BB10v3.png)  
+
+> **Note:** Tiedostojen koodi ja komentorivien komennot luotiin ChatGPT Versiolla 5.6  
+
+## c) Run 'packd' from the package ezbin-challenges.zip. What is the password? What is the flag?  
+> **Note:** Komentorivien komennot luotiin ChatGPT Versiolla 5.6  
+> paketin purku: upx -d packd
+
+Packd tiedosto on paketoitu UPX:llä  
+![](Images/H3UPX1.png)  
+
+Purin sen:  
+![](Images/H3UPX2.png)  
+ 
+
+Menin seuraavaksi täysin autopilotti moodissa kirjoittamaan:  
+**cat packd**  
+Tässä tuskin oli tarkoitus katsoa suoraan binääristä.  
+
+Mutta sentään ymmärsin tehtävästä, että aluksi oli UPX paketti.  
+Tämän purkamisen jälkeen oli komennolla **file packd** tunnistettu ELF paketti, josta oli mahdollista etsiä  
+komennolla **strings packd** lista eri merkkijonoja. Yksi niistä ollen salasana ja lippu.  
+![](Images/H3UPX3v2.png)  
+
+![](Images/H3UPX4.png)  
+
+Tehtävät: H3. https://terokarvinen.com/application-hacking/#laksyt  
